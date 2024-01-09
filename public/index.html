@@ -14,11 +14,13 @@
     </div>
     <div class="row">
       <div class="col-4 text-center bg-success" id="editor">
+        <!-- form for create new memo. -->
         <form action="/memo" method="post" id="memoForm" enctype="multipart/form-data">
           <textarea class="col" name="memoEntry" id="memoEntry" cols="15" rows="5" style="background-color: rgb(220, 220, 87);">Memo</textarea>
           <input type="file" name="chooseFile" id="chooseFile">
           <button type="submit">Submit</button>
         </form>
+        <!-- form for user login -->
         <form action="/login" method="post" id="loginForm" >
           <div>Admin</div>
           <label for="userName">User Name:</label>

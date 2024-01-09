@@ -1,11 +1,11 @@
 import IncomingForm from 'formidable/Formidable';
-import { Request } from 'express';
+import express from 'express';
 import {Fields, Files} from 'formidable';
 
 
-export function parse(form: IncomingForm, req: Request) {
+export function parse(form: IncomingForm, req: express.Request) {
   return new Promise<{ fields: Fields; files: Files }>((resolve, reject) => {
-    form.parse(req, async (err, fields, files) => {
+    form.parse(req, (err, fields, files) => {
       if (err) {
         reject(err)
       } else {
