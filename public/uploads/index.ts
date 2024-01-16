@@ -159,7 +159,7 @@ app.get('/like_memos', async (req: Request, res: Response) => {
 })
 
 app.get('/like_memo', async (req: Request, res: Response) => {
-	const userId = req.session.userId;
+	const userId = req.query.user_id;
 	const users:User[] = await jsonfile.readFile('./user.json')
 	const memos:memoRecord[] = await jsonfile.readFile('./memo.json')
 	console.log(userId)

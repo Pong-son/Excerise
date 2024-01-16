@@ -1,8 +1,64 @@
 body {
-  box-sizing: border-box;
-  height: 100vh;
+	box-sizing: border-box;
+	height: 100vh;
 }
 
 #mainContent {
-  height: 100%;
+	height: 100%;
+}
+
+.memo {
+	position: relative;
+	height: 120px;
+	width: 120px;
+	background-color: rgb(220, 220, 87);
+	color: blue;
+	border: 3px;
+	margin: 25px;
+}
+.material-symbols-outlined {
+	color: black;
+	font-variation-settings: 'wdth' 1000;
+}
+
+#del {
+	position: absolute;
+	font-size: 20px;
+	top: -7%;
+	right: -7%;
+	background-color: white;
+	border-radius: 25px;
+}
+#edit {
+	position: absolute;
+	font-size: 20px;
+	bottom: -7%;
+	right: -7%;
+	background-color: white;
+	border-radius: 25px;
+}
+#favorite {
+	position: absolute;
+	font-size: 20px;
+	bottom: -7%;
+	left: -7%;
+	background-color: white;
+	border-radius: 25px;
+}
+
+.material-icons {
+	color: black;
+}
+
+[data-id] {
+	text-align: center;
+	color: rgb(0, 0, 0);
+	background-color: rgb(220, 220, 87);
+	border: 0;
+	height: 120px;
+	width: 120px;
+}
+
+.hide {
+	display: none;
 }
