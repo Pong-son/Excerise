@@ -3,6 +3,8 @@ import path from 'path'
 import jsonfile from 'jsonfile'
 import { parse } from '../utils'
 import formidable from 'formidable'
+import { client } from '../index';
+
 
 const memoRoutes = express.Router()
 
@@ -10,8 +12,6 @@ interface memoRecord {
 	id: string
 	content: string | string[]
 	image?: string
-	likeCount: number
-	likePerson:string[]
 }
 
 let counter = 0
@@ -32,38 +32,44 @@ const form = formidable({
 })
 
 const getMemos = async (req: express.Request, res: express.Response) => {
-	let memoFile = await jsonfile.readFile('./memo.json')
-	res.json(memoFile)
+	try {
+		let memoList:any = []
+		memoList = await client.query(
+			'select * from memos'
+		)
+		if (memoList.rows.length === 0) {
+			res.json([])
+		} else {
+			res.json(memoList.rows)
+		}
+	} catch (err) {
+		console.log(err)
+		res.json([])
+	}
+	// let memoFile = await jsonfile.readFile('./memo.json')
 }
 
 const postMemos = async (req: express.Request, res: express.Response) => {
 	const { fields, files } = await parse(form, req)
 	fields
-	let memoFile: memoRecord[] = await jsonfile.readFile('./memo.json')
-
-	const memoId: number = memoFile.length === 0 ? 0 : Number(memoFile.slice(-1)[0].id)
-
-	if (files.chooseFile === undefined) {
-		memoFile.push({
-			id: (memoId + 1).toString(),
-			content: fields.memoEntry,
-			likeCount: 0,
-			likePerson:[]
-		})
-	} else {
-		memoFile.push({
-			id: (memoId + 1).toString(),
-			content: fields.memoEntry,
-			image: (files.chooseFile as formidable.File).newFilename,
-			likeCount: 0,
-			likePerson:[]
-		})
+	// let memoFile: memoRecord[] = await jsonfile.readFile('./memo.json')
+	try {
+		let memoList:any = []
+		memoList
+		if (files.chooseFile === undefined) {
+			memoList = await client.query(
+				'INSERT INTO memos (content) values ($1)',
+					[fields.memoEntry]
+			)
+		} else {
+			memoList = await client.query(
+				'INSERT INTO memos (content,image) values ($1,$2)',
+					[fields.memoEntry,(files.chooseFile as formidable.File).newFilename]
+			)
+		}
+	} catch (err) {
+		console.log(err)
 	}
-
-	await jsonfile.writeFile(path.join(__dirname, '../memo.json'), memoFile, {
-		spaces: 2
-	})
-	// res.redirect('/')
 	res.json({ fields, files })
 }
 
@@ -89,20 +95,11 @@ const putMemos = async (req: express.Request, res: express.Response) => {
 
 	const newMemoFile: memoRecord[] = []
 
-	let currentLikeCount:number = 0
-	let currentLikePerson:string[] = []
 	let currentImage:string = ''
 	
 	memoFile.forEach(memo => {
 		if(memo.id === req.body.id && memo.image) {
-			currentLikeCount = memo.likeCount
-			currentLikePerson = memo.likePerson
 			currentImage = memo.image
-		} else {
-			if(memo.id === req.body.id && memo.image) {
-				currentLikeCount = memo.likeCount
-				currentLikePerson = memo.likePerson
-			}
 		}
 	})
 
@@ -112,16 +109,12 @@ const putMemos = async (req: express.Request, res: express.Response) => {
 		newMemo = {
 			id: req.body.id,
 			content: req.body.content,
-			image: currentImage,
-			likeCount: currentLikeCount,
-			likePerson:currentLikePerson
+			image: currentImage
 		} 
 	} else {
 		newMemo = {
 			id: req.body.id,
-			content: req.body.content,
-			likeCount: currentLikeCount,
-			likePerson:currentLikePerson
+			content: req.body.content
 		}
 	}
 

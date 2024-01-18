@@ -95,20 +95,26 @@ async function loadMemos() {
 	const res = await fetch('/memo') // Fetch from the correct url
 	const memos = await res.json()
 	const memosContainer = document.querySelector('#mainWall')
-	for (let memo of memos) {
-		memosContainer.innerHTML += `<div class="memo" id=${memo.id}>
-        <input type="text" id=data${memo.id} data-id=${memo.id} value=${memo.content}>
-        <span class="material-symbols-outlined" id="del" onclick="delFtn(event)">
-          delete
-        </span>
-        <span class="material-symbols-outlined" id="favorite" onclick="favFtn(event)">
-          favorite
-        </span>
-        <span class="material-symbols-outlined bi-pencil-square" id="edit" onclick="editFtn(event)">
-          edit_square
-        </span>
-      </div>
-    `
+	if (memos.length !== 0){
+		try {
+			for (let memo of memos) {
+				memosContainer.innerHTML += `<div class="memo" id=${memo.id}>
+						<input type="text" id=data${memo.id} data-id=${memo.id} value=${memo.content}>
+						<span class="material-symbols-outlined" id="del" onclick="delFtn(event)">
+							delete
+						</span>
+						<span class="material-symbols-outlined" id="favorite" onclick="favFtn(event)">
+							favorite
+						</span>
+						<span class="material-symbols-outlined bi-pencil-square" id="edit" onclick="editFtn(event)">
+							edit_square
+						</span>
+					</div>
+				`
+			}
+		} catch (e) {
+			console.log(e)
+		}
 	}
 }
 
