@@ -78,9 +78,10 @@ const delMemos = async (req: express.Request, res: express.Response) => {
 }
 
 const putMemos = async (req: express.Request, res: express.Response) => {
+	console.log(req.body.content,Number(req.body.id))
 	try {
 		await client.query(
-			`update memos set content = ${req.body.content} where id = ${req.body.id}`
+			`update memos set content = ${req.body.content} where id = ${Number(req.body.id)}`
 		)
 	} catch (err) {
 		console.log(err)

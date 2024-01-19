@@ -159,7 +159,8 @@ const editFtn = async (e) => {
 	const id = e.target.parentElement.id
 	const content = newMemoValue.value
 
-	await fetch(`/memo${e.target.parentElement.id}`, {
+	console.log(id, content)
+	await fetch(`/memo:${id}`, {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json'
