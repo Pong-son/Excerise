@@ -25,7 +25,7 @@ const server = new http.Server(app);
 export const io = new SocketIO(server);
 
 io.on('connection', function (socket) {
-	console.log(socket);
+	socket;
 });
 
 app.use(express.urlencoded({ extended: true }));
@@ -45,6 +45,7 @@ app.use(
 declare module 'express-session' {
 	interface SessionData {
 		counter?: number
+		userId?:number
 		user?: string
 	}
 }
@@ -62,6 +63,7 @@ app.use((req, res, next) => {
 })
 
 interface User {
+	id?:number
 	username: string
 	password: string
 }
@@ -85,7 +87,8 @@ app.post('/login', async (req, res) => {
 					user.password === req.body.password
 				) {
 					console.log("success")
-					req.session.user = req.body.username
+					req.session.user = user.username
+					user.id?req.session.userId = user.id: req.session.user
 				}
 			})
 		}
@@ -174,6 +177,22 @@ app.get('/user', async (req: Request, res: Response) => {
 
 app.get('/like_memos', async (req: Request, res: Response) => {
 	res.sendFile(path.resolve('public/protected', 'like_memos.html'))
+})
+
+app.put('/like_memo', async (req: express.Request, res: express.Response) => {
+	console.log(req.session.userId)
+	let userId = req.session.userId
+	let memoId = req.body.id
+	console.log(userId,memoId)
+	try {
+		await client.query(
+			`INSERT INTO likes (user_id,memo_id) VALUES (${userId}, ${memoId});`
+		)
+		console.log("like")
+	} catch (err) {
+		err
+	}
+	res.json('Liked')
 })
 
 app.use((req, res) => {

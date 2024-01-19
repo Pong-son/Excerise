@@ -3,6 +3,7 @@ const socket = io.connect();
 socket.on("new-memo",(data)=>{
 	// data has the content {msg:"Hello Client"}
 	console.log(data)
+	loadMemos()
 })
 
 document
@@ -107,18 +108,21 @@ async function loadMemos() {
 			for (let memo of memos) {
 				memosContainer.innerHTML += `<div class="memo" id=${memo.id}>
 						<input type="text" id=data${memo.id} data-id=${memo.id} value=${memo.content}>
-						<span class="material-symbols-outlined" id="del" onclick="delFtn(event)">
+						<span class="material-symbols-outlined" id="del">
 							delete
 						</span>
-						<span class="material-symbols-outlined" id="favorite" onclick="favFtn(event)">
+						<span class="material-symbols-outlined" id="favorite">
 							favorite
 						</span>
-						<span class="material-symbols-outlined bi-pencil-square" id="edit" onclick="editFtn(event)">
+						<span class="material-symbols-outlined bi-pencil-square" id="edit">
 							edit_square
 						</span>
 					</div>
 				`
 			}
+			document.querySelectorAll('#del').forEach(item => item.onclick = delFtn)
+			document.querySelectorAll('#favorite').forEach(item => item.onclick = favFtn)
+			document.querySelectorAll('#edit').forEach(item => item.onclick = editFtn)
 		} catch (e) {
 			console.log(e)
 		}
@@ -136,7 +140,17 @@ const delFtn = async (e) => {
 	loadMemos()
 }
 const favFtn = async (e) => {
-	console.log('fav' + e.target.parentElement.id)
+	await fetch('/like_memo', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			id: e.target.parentElement.id,
+		})
+	})
+
+
 }
 const editFtn = async (e) => {
 	const newMemoValue = document.querySelector(
@@ -172,4 +186,12 @@ const toRegForm = () => {
 const toLoginForm = () => {
 	document.querySelector('#loginForm').classList.remove('hide')
 	document.querySelector('#regisForm').classList.add('hide')
+}
+
+document.querySelector('#test').addEventListener('click',()=>{
+	document.querySelector('#testArea').innerHTML += '<div id="test" onclick=test()>test</div>'
+})
+
+const test = () => {
+	console.log("test")
 }

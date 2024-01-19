@@ -39,13 +39,11 @@ const getMemos = async (req: express.Request, res: express.Response) => {
 		console.log(err)
 		res.json([])
 	}
-	// let memoFile = await jsonfile.readFile('./memo.json')
 }
 
 const postMemos = async (req: express.Request, res: express.Response) => {
 	const { fields, files } = await parse(form, req)
 	fields
-	// let memoFile: memoRecord[] = await jsonfile.readFile('./memo.json')
 	try {
 		let memoList:any = []
 		memoList
@@ -87,14 +85,14 @@ const putMemos = async (req: express.Request, res: express.Response) => {
 	} catch (err) {
 		console.log(err)
 	}
-	// res.redirect('/')
 	res.json('Edited')
 }
+
+
 
 memoRoutes.get('/memo', getMemos)
 memoRoutes.post('/memo', postMemos)
 memoRoutes.delete('/memo:id', delMemos)
 memoRoutes.put('/memo:id', putMemos)
-// memoRoutes.get('/like_memos',likeMemos);
 
 export { memoRoutes, getMemos, postMemos, delMemos, putMemos }
