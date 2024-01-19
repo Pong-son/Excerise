@@ -1,18 +1,11 @@
-import express from 'express'
-import path from 'path'
-import jsonfile from 'jsonfile'
-import { parse } from '../utils'
-import formidable from 'formidable'
+import express from 'express';
+import { parse } from '../utils';
+import formidable from 'formidable';
 import { client } from '../index';
+import { io } from '../index';
 
 
 const memoRoutes = express.Router()
-
-interface memoRecord {
-	id: string
-	content: string | string[]
-	image?: string
-}
 
 let counter = 0
 
@@ -67,67 +60,33 @@ const postMemos = async (req: express.Request, res: express.Response) => {
 					[fields.memoEntry,(files.chooseFile as formidable.File).newFilename]
 			)
 		}
+		io.emit("new-memo","Congratulations! New Memo Created!");
 	} catch (err) {
 		console.log(err)
 	}
-	res.json({ fields, files })
+	res.json({updated:1})
 }
 
 const delMemos = async (req: express.Request, res: express.Response) => {
-	const memoFile: memoRecord[] = await jsonfile.readFile('./memo.json')
-
-	const newMemoFile: memoRecord[] = []
-
-	memoFile.forEach((memo) => {
-		if (memo.id !== req.params.id) {
-			newMemoFile.push(memo)
-		}
-	})
-	await jsonfile.writeFile(path.join(__dirname, '../memo.json'), newMemoFile, {
-		spaces: 2
-	})
+	try {
+		await client.query(
+			`delete from memos where id = ${req.params.id}`
+		)
+	} catch (err) {
+		console.log(err)
+	}
 	// res.redirect('/')
 	res.json('Deleted')
 }
 
 const putMemos = async (req: express.Request, res: express.Response) => {
-	const memoFile: memoRecord[] = await jsonfile.readFile('./memo.json')
-
-	const newMemoFile: memoRecord[] = []
-
-	let currentImage:string = ''
-	
-	memoFile.forEach(memo => {
-		if(memo.id === req.body.id && memo.image) {
-			currentImage = memo.image
-		}
-	})
-
-	let newMemo: memoRecord
-
-	if(currentImage) {
-		newMemo = {
-			id: req.body.id,
-			content: req.body.content,
-			image: currentImage
-		} 
-	} else {
-		newMemo = {
-			id: req.body.id,
-			content: req.body.content
-		}
+	try {
+		await client.query(
+			`update memos set content = ${req.body.content} where id = ${req.body.id}`
+		)
+	} catch (err) {
+		console.log(err)
 	}
-
-	memoFile.forEach((memo) => {
-		if (memo.id !== req.params.id) {
-			newMemoFile.push(memo)
-		} else {
-			newMemoFile.push(newMemo)
-		}
-	})
-	await jsonfile.writeFile(path.join(__dirname, '../memo.json'), newMemoFile, {
-		spaces: 2
-	})
 	// res.redirect('/')
 	res.json('Edited')
 }

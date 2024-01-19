@@ -1,3 +1,10 @@
+const socket = io.connect();
+
+socket.on("new-memo",(data)=>{
+	// data has the content {msg:"Hello Client"}
+	console.log(data)
+})
+
 document
 	.querySelector('#memoForm')
 	.addEventListener('submit', async (event) => {

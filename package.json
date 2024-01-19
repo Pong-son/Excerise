@@ -19,6 +19,7 @@
 		"formidable": "^2.1.2",
 		"jsonfile": "^6.1.0",
 		"pg": "^8.11.3",
+		"socket.io": "^4.7.4",
 		"xlsx": "^0.18.5"
 	},
 	"devDependencies": {
