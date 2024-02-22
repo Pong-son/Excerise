@@ -5,6 +5,11 @@ import path from 'path';
 import expressSession from 'express-session';
 import jsonfile from 'jsonfile';
 import { memoRoutes } from './routes/memoRoute';
+import { loginRoutes } from './routes/loginRoute';
+import { logoutRoutes } from './routes/logoutRoute';
+import { registerRoutes } from './routes/registerRoute';
+import { equipmentRoutes } from './routes/equipmentRoute';
+import { calPeriodRoutes } from './routes/calPeriodRoutes';
 import { Client } from 'pg';
 import dotenv from 'dotenv';
 import {Server as SocketIO} from 'socket.io';
@@ -62,84 +67,17 @@ app.use((req, res, next) => {
 	next()
 })
 
-interface User {
-	id?:number
-	username: string
-	password: string
-}
-
-// interface memoRecord {
-// 	content: string | string[]
-// 	image?: string
-// }
-
-app.post('/login', async (req, res) => {
-	let userList:any = []
-	try {
-		userList = await client.query(
-			'select * from users'
-		)
-
-		if(userList.rows.length !== 0) {
-			userList.rows.map((user: User) => {
-				if (
-					user.username === req.body.username &&
-					user.password === req.body.password
-				) {
-					console.log("success")
-					req.session.user = user.username
-					user.id?req.session.userId = user.id: req.session.user
-				}
-			})
-		}
-		console.log(req.session.user)
-		if (!req.session.user) {
-			res.json('fail')
-		} else {
-			res.json('done')
-		}
-	} catch (e) {
-		console.log(e)
-	}
-})
-
-app.post('/register', async (req, res) => {
-	let userNameValid:boolean = true
-	let userList:any = []
-	try {
-		userList = await client.query(
-			'select * from users'
-		)
-
-		if(userList.rows.length !== 0) {
-			userList.rows.map((user: User) => {
-				if (user.username === req.body.username) {
-					userNameValid = false
-					res.json("Name Has Been Used")
-				}
-			})
-		}
-		if(req.body.username.length < 4) {
-			userNameValid = false
-			res.json("Name should not shorter than 4")
-		}
-		if(userNameValid) {
-			const newUser: User = {
-				username: req.body.username as string,
-				password: req.body.password as string,
-			}
-			
-			await client.query(
-				'INSERT INTO users (username,password,created_at) values ($1,$2,$3)',
-				[newUser.username,newUser.password, new Date()]
-			)
-		}
-	} catch (e) {
-		console.log(e)
-	}
-})
-
 app.use(express.static('public'))
+
+app.use('/', loginRoutes)
+
+app.use('/', logoutRoutes)
+
+app.use('/', registerRoutes)
+
+app.use('/', equipmentRoutes)
+
+app.use('/', calPeriodRoutes)
 
 app.use('/', memoRoutes)
 
@@ -169,6 +107,22 @@ app.use(isLoggedIn, express.static('protected'))
 app.get('/admin', (req: Request, res: Response) => {
 	res.sendFile(path.resolve('public/protected', 'admin.html'))
 })
+
+app.get('/equipment', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'equipment.html'))
+})
+
+app.get('/cal_period', (req: Request, res: Response) => {
+	res.sendFile(path.resolve('public/protected', 'cal_period.html'))
+})
+
+// app.get('/admin', (req: Request, res: Response) => {
+// 	res.sendFile(path.resolve('public/protected', 'admin.html'))
+// })
+
+// app.get('/admin', (req: Request, res: Response) => {
+// 	res.sendFile(path.resolve('public/protected', 'admin.html'))
+// })
 
 app.get('/user', async (req: Request, res: Response) => {
 	const likeMemos = await jsonfile.readFile('./user.json')

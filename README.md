@@ -1,3 +1,0 @@
-# Excerise
-
-WSPv01

@@ -12,17 +12,21 @@
 	"dependencies": {
 		"@types/jsonfile": "^6.1.4",
 		"@types/xlsx": "^0.0.36",
+		"bcryptjs": "^2.4.3",
 		"bootstrap": "^5.3.2",
+		"cross-fetch": "^4.0.0",
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
 		"express-session": "^1.17.3",
 		"formidable": "^2.1.2",
+		"grant": "^5.4.22",
 		"jsonfile": "^6.1.0",
 		"pg": "^8.11.3",
 		"socket.io": "^4.7.4",
 		"xlsx": "^0.18.5"
 	},
 	"devDependencies": {
+		"@types/bcryptjs": "^2.4.6",
 		"@types/express": "^4.17.21",
 		"@types/express-session": "^1.17.10",
 		"@types/formidable": "^2.0.6",

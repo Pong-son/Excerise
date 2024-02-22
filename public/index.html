@@ -13,11 +13,88 @@
 		/>
 	</head>
 	<body>
-		<div id="mainContent" class="container-fluid text-bg-primary">
-			<div>
-				Nav Bar
-				<button id="test" class="test">Click</button>
-				<span id="testArea"></span>
+		<div id="mainContent" class="container-fluid ">
+			<div id="navBar">
+				<nav class="navbar navbar-expand-lg text-bg-primary">
+					<div class="container-fluid">
+						<a class="navbar-brand" href="/">E & M</a>
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarSupportedContent">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item">
+									<a class="nav-link active" aria-current="page" href="/">Home</a>
+								</li>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										Chemical
+									</a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" href="#">Reagent</a></li>
+										<li><a class="dropdown-item" href="#">Reference Material</a></li>
+									</ul>
+								</li>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										Equipment
+									</a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" href="/equipment">Equipment List</a></li>
+										<li><a class="dropdown-item" href="/cal_period">Calibration Period</a></li>
+									</ul>
+								</li>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										Service
+									</a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" href="#">Sample Record</a></li>
+										<li><a class="dropdown-item" href="#">Testing Item</a></li>
+									</ul>
+								</li>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										Supplier
+									</a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" href="#">Supplier List</a></li>
+										<li><a class="dropdown-item" href="#">Purchase Order</a></li>
+									</ul>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+								</li>
+							</ul>
+							<div class="d-flex">
+								<!-- <div id="logoutBtn" class="" ></div> -->
+								<button type="button" id="loginBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal"></button>
+							</div>
+						</div>
+					</div>
+				</nav>				
+				<div class="modal fade" tabindex="-1" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header bg-primary">
+								<h5 class="modal-title" id="loginModalLabel">Login</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form action="/login" method="post" id="loginForm">
+									<input type="text" name="userName" id="userName" class="form-control" placeholder="Username" aria-label="username"/>
+									<br />
+									<input type="password" name="passWord" id="passWord"class="form-control" placeholder="Password" aria-label="Password"/>
+									<br />
+									<button type="submit" data-bs-dismiss="modal">Login</button>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-4 text-center bg-success" id="editor">
@@ -40,35 +117,6 @@ Memo</textarea
 						>
 						<input type="file" name="chooseFile" id="chooseFile" />
 						<button type="submit">Submit</button>
-					</form>
-					<!-- form for user login -->
-					<form action="/login" method="post" id="loginForm">
-						<div>Admin</div>
-						<label for="userName">User Name:</label>
-						<input type="text" name="userName" id="userName" />
-						<br />
-						<label for="passWord">Password:</label>
-						<input type="password" name="passWord" id="passWord" />
-						<br />
-						<button type="submit">Login</button>
-						<div onclick="toRegForm()">Register</div>
-						<div>Login via Google</div>
-					</form>
-					<form action="/register" class="hide" method="post" id="regisForm">
-						<div>Admin</div>
-						<label for="rUserName">User Name:</label>
-						<input type="text" name="rUserName" id="rUserName" />
-						<br />
-						<label for="rPassWord">Password:</label>
-						<input type="password" name="rPassWord" id="rPassWord" />
-						<br />
-						<label for="cfmRPassWord">Confirm Password:</label>
-						<input type="password" name="cfmRPassWord" id="cfmRPassWord" />
-						<br />
-            <div id="regWarn"></div>
-						<button type="submit">Register</button>
-						<div onclick="toLoginForm()">To Login Form</div>
-						<div>Login via Google</div>
 					</form>
 				</div>
 				<div id="mainWall" class="offset-1 col-6 grid"></div>
